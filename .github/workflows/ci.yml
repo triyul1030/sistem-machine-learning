@@ -28,7 +28,7 @@ jobs:
         id: train
         run: |
           cd Workflow-CI/MLProject
-          mlflow run . -P param=none --no-conda
+          mlflow run . -P param=none --env-manager=local
           
           python modelling.py
 
