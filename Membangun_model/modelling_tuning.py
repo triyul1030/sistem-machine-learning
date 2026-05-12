@@ -10,6 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
 dagshub.init(repo_owner='triyul1030', repo_name='sistem-machine-learning', mlflow=True)
+mlflow.set_experiment("Breast Cancer Classification")
 
 mlflow.set_tracking_uri("https://dagshub.com/triyul1030/sistem-machine-learning.mlflow")
 

@@ -4,7 +4,16 @@ import pandas as pd
 import random
 import time
 
-url = 'http://127.0.0.1:5000/invocations'
+url = 'http://127.0.0.1:8080/invocations'
+
+kolom_breast_cancer = [
+    'mean radius', 'mean texture', 'mean perimeter', 'mean area', 'mean smoothness', 
+    'mean compactness', 'mean concavity', 'mean concave points', 'mean symmetry', 'mean fractal dimension', 
+    'radius error', 'texture error', 'perimeter error', 'area error', 'smoothness error', 
+    'compactness error', 'concavity error', 'concave points error', 'symmetry error', 'fractal dimension error', 
+    'worst radius', 'worst texture', 'worst perimeter', 'worst area', 'worst smoothness', 
+    'worst compactness', 'worst concavity', 'worst concave points', 'worst symmetry', 'worst fractal dimension'
+]
 
 def send_request():
     dummy_data = [[random.uniform(-2, 2) for _ in range(30)]]
@@ -15,7 +24,7 @@ def send_request():
 
     payload = {
         "dataframe_split": {
-            "columns": [f"feature_{i}" for i in range(30)],
+            "columns": kolom_breast_cancer,
             "data": dummy_data
         }
     }
