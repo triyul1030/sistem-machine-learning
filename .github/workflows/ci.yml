@@ -9,9 +9,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  mlflow-build-docker:
+  ml-ci:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Run actions/checkout@v3
         uses: actions/checkout@v3
@@ -32,16 +32,22 @@ jobs:
       - name: Run mlflow project
         run: |
           cd Workflow-CI/MLProject
-          mlflow run . -P param=none --no-conda
-          python modelling.py
+          mlflow run . --no-conda
 
       - name: Get latest MLflow run_id
         id: get_run_id
         run: |
           cd Workflow-CI/MLProject
-          RUN_ID=$(ls -t mlruns/0 | head -n 1)
+          # Cari experiment ID terlebih dahulu
+          EXPERIMENT_ID=$(ls mlruns/ | grep -v trash | head -n 1)
+          echo "Experiment ID: $EXPERIMENT_ID"
+          # Cari run ID terbaru di dalam experiment
+          RUN_ID=$(ls -t mlruns/$EXPERIMENT_ID/ | grep -v meta | head -n 1)
           echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
           echo "Ditemukan Run ID: $RUN_ID"
+
+      - name: Install Python dependencies
+        run: pip install mlflow==2.19.0
 
       - name: Upload to GitHub
         uses: actions/upload-artifact@v4
@@ -52,7 +58,8 @@ jobs:
       - name: Build Docker Model
         run: |
           cd Workflow-CI/MLProject
-          mlflow models build-docker -m "runs:/${{ env.RUN_ID }}/model" -n sistem-machine-learning-model:latest
+          EXPERIMENT_ID=$(ls mlruns/ | grep -v trash | head -n 1)
+          mlflow models build-docker -m "mlruns/$EXPERIMENT_ID/${{ env.RUN_ID }}/artifacts/model" -n sistem-machine-learning-model:latest
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
