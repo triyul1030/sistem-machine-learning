@@ -32,6 +32,7 @@ jobs:
       - name: Run mlflow project
         run: |
           cd Workflow-CI/MLProject
+          rm -rf mlruns/
           mlflow run . --env-manager=local
 
       - name: Get latest MLflow run_id
