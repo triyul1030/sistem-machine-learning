@@ -60,6 +60,9 @@ jobs:
         run: |
           cd Workflow-CI/MLProject
           EXPERIMENT_ID=$(ls mlruns/ | grep -v trash | head -n 1)
+
+          python -c "import yaml, sys; p=sys.argv[1]; d=yaml.safe_load(open(p)); d['channels'] = [c for c in d.get('channels', []) if c != 'defaults']; d['channels'].append('nodefaults'); yaml.dump(d, open(p, 'w'), default_flow_style=False)" "mlruns/$EXPERIMENT_ID/${{ env.RUN_ID }}/artifacts/model/conda.yaml"
+
           mlflow models build-docker -m "mlruns/$EXPERIMENT_ID/${{ env.RUN_ID }}/artifacts/model" -n sistem-machine-learning-model:latest --env-manager=conda
 
       - name: Log in to Docker Hub
