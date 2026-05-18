@@ -1,2 +1,2 @@
 Tautan Repository GitHub (Workflow CI):
-https://github.com/triyul1030/sistem-machine-learning
+https://github.com/triyul1030/Workflow-CI.git
